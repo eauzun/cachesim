@@ -25,7 +25,7 @@ CacheSimulator::CacheSimulator(const CacheConfig& cfg) : config(cfg) {
     global_fifo_counter = 0;
 
     //calculating cache parameters
-    block_offset_bits = log2(config.block_size);
+    block_offset_bits = (int)log2(config.block_size);
 
     if (config.associativity == 0) { //if fully associative
         num_sets = 1;
@@ -35,7 +35,7 @@ CacheSimulator::CacheSimulator(const CacheConfig& cfg) : config(cfg) {
         num_sets = config.cache_size / (config.block_size * config.associativity);
     }
     
-    index_bits = log2(num_sets);
+    index_bits = (int)log2(num_sets);
     tag_bits = 32 - index_bits - block_offset_bits;
 
     //initializing cache
@@ -47,7 +47,7 @@ CacheSimulator::CacheSimulator(const CacheConfig& cfg) : config(cfg) {
 
 void CacheSimulator::parseAddress(unsigned long address, unsigned long& tag, int& index) {
     unsigned long block_address = address >> block_offset_bits;
-    index = block_address & ((1 << index_bits) - 1);
+    index = block_address & ((1UL << index_bits) - 1);
     tag = block_address >> index_bits;
 }
 
